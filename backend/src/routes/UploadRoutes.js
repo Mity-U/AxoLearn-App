@@ -1,9 +1,9 @@
 const express = require('express');
 const multer = require('multer');
-const { extractText } = require('../services/documentParser'); // Panggil si tukang baca
+const { extractText } = require('../services/documentParser');
+const { generateQuiz } = require('../services/aiService'); // Panggil service AI-nya
 const router = express.Router();
 
-// Setting Multer (Gudang penyimpanan sementara)
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/');
@@ -16,34 +16,35 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Pintu masuk /api/upload
 router.post('/', upload.single('materi'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'Waduh, nggak ada file yang masuk nih!' });
     }
 
     try {
-        // 1. Ambil lokasi file dan tipe filenya
         const filePath = req.file.path;
         const fileType = req.file.mimetype;
 
-        // 2. Suruh service documentParser buat baca isinya
+        console.log('1. Membaca isi dokumen...');
         const extractedText = await extractText(filePath, fileType);
 
-        // 3. Tampilkan sebagian teks di terminal server buat ngecek aja
-        console.log('--- HASIL BACAAN SEMENTARA ---');
-        console.log(extractedText.substring(0, 200) + '... [lanjutannya masih panjang]');
-        console.log('------------------------------');
+        console.log('2. Menyuruh Gemini membuat soal kuis (tunggu sebentar)...');
+        // Supaya AI-nya nggak pusing baca teks kepanjangan, kita batasi baca 3000 karakter pertama aja
+        const textForAI = extractedText.substring(0, 3000);
+        const quizData = await generateQuiz(textForAI);
 
-        // 4. Balikin respons sukses ke frontend
+        console.log('3. Yey! Kuis berhasil dibuat oleh AI:');
+        console.log(quizData); // Cetak hasil kuis di terminal
+
+        // Kirim soal kuis yang udah jadi ke frontend
         res.status(200).json({
-            message: 'Mantap, file berhasil dibaca mesin!',
-            // Nanti teks ini nggak perlu dikirim balik ke frontend, tapi untuk sekarang biar ketahuan aja
-            previewTeks: extractedText.substring(0, 100)
+            message: 'Materi berhasil diubah jadi kuis!',
+            kuis: quizData
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server gagal membaca isi file dokumen.' });
+        console.error(error);
+        res.status(500).json({ message: 'Server ngadat pas nyoba bikin kuis dari materi.' });
     }
 });
 
