@@ -7,17 +7,38 @@ const UploadPage = () => {
     const [uploadStatus, setUploadStatus] = useState('idle');
     const [fileName, setFileName] = useState('');
 
-    const onDrop = useCallback((acceptedFiles) => {
+    const onDrop = useCallback(async (acceptedFiles) => {
         const file = acceptedFiles[0];
+
         if (file) {
             setFileName(file.name);
             setUploadStatus('uploading');
 
-            // Simulasi proses AI membaca berkas (nanti kita ganti dengan tembakan API beneran ke backend)
-            setTimeout(() => {
-                // Anggap saja berhasil setelah 3 detik
-                setUploadStatus('success');
-            }, 3000);
+            // 1. Kita bungkus filenya pakai FormData (ibarat masukin barang ke dalem paket kurir)
+            const formData = new FormData();
+            // Kunci 'materi' di bawah ini HARUS persis sama kayak yang kita set di backend
+            formData.append('materi', file);
+
+            try {
+                // 2. Kirim paketnya ke alamat backend kita
+                const response = await fetch('http://localhost:5000/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                // 3. Cek apakah paketnya selamat sampai tujuan
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Mantap, balasan dari backend:', data);
+                    setUploadStatus('success'); // Ubah lampu indikator jadi sukses
+                } else {
+                    console.error('Waduh, gagal ngirim nih');
+                    setUploadStatus('error'); // Ubah lampu indikator jadi error
+                }
+            } catch (error) {
+                console.error('Kayaknya server backend belum nyala atau ada masalah jaringan:', error);
+                setUploadStatus('error');
+            }
         }
     }, []);
 
