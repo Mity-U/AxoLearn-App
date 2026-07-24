@@ -22,7 +22,8 @@ const UploadPage = () => {
             setUploadStatus('uploading');
 
             const formData = new FormData();
-            formData.append('materi', file);
+            // PERBAIKAN DI SINI: Ubah 'materi' jadi 'file' agar cocok dengan backend Multer
+            formData.append('file', file);
 
             try {
                 const response = await fetch('http://localhost:5000/api/upload', {
@@ -32,7 +33,7 @@ const UploadPage = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    setQuizData(data.kuis);
+                    setQuizData(data.kuis); // Pastikan backend beneran ngirim properti 'kuis'
                     console.log('Mantap, balasan dari backend:', data);
                     setUploadStatus('success');
                 } else {
