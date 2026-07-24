@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Jangan lupa import useEffect
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Memanggil file desain CSS
@@ -16,7 +16,42 @@ const QuizPage = () => {
     const [score, setScore] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
 
-    // 3. Jaga-jaga kalau user langsung nembak URL '/quiz' tanpa lewat upload file
+    // 3. Fungsi untuk ngirim skor ke database (DITARUH DI DALAM SINI BIAR BISA BACA LOCATION & STATE)
+    const simpanSkorKeDatabase = async (skorAkhir) => {
+        // Cek lagi di bagian login kamu, nyimpennya pakai nama 'no_hp' atau 'phone_number'
+        const nomorHpUser = localStorage.getItem('phone_number') 
+        const ruangan = namaRuangan || "Ruang Belajar Rahasia";
+
+        try {
+            const response = await fetch('http://localhost:5000/api/simpan-skor', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    phone_number: nomorHpUser,
+                    nama_ruangan: ruangan,
+                    skor: skorAkhir
+                })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                console.log('Mantap! Skor udah aman di database.');
+            }
+        } catch (error) {
+            console.error('Waduh, gagal ngirim skor ke server:', error);
+        }
+    };
+
+    // 4. Pemicu otomatis: Kalau game selesai (isFinished jadi true), langsung tembak database
+    useEffect(() => {
+        if (isFinished) {
+            simpanSkorKeDatabase(score);
+        }
+    }, [isFinished]); // Ini ibarat alarm yang mantau status isFinished
+
+    // 5. Jaga-jaga kalau user langsung nembak URL '/quiz' tanpa lewat upload file
     if (!soalKuis || soalKuis.length === 0) {
         return (
             <div className="quiz-container">
@@ -34,7 +69,7 @@ const QuizPage = () => {
 
     const currentQuestion = soalKuis[currentIndex];
 
-    // 4. Fungsi saat user memilih jawaban
+    // 6. Fungsi saat user memilih jawaban
     const handleAnswerClick = (selectedOption) => {
         // Cek apakah jawaban benar
         if (selectedOption === currentQuestion.jawaban_benar) {
@@ -46,11 +81,11 @@ const QuizPage = () => {
         if (nextIndex < soalKuis.length) {
             setCurrentIndex(nextIndex);
         } else {
-            setIsFinished(true);
+            setIsFinished(true); // Ini bakal bikin kuis tamat, dan memicu useEffect di atas
         }
     };
 
-    // 5. Tampilan kalau kuis sudah selesai (Result Screen)
+    // 7. Tampilan kalau kuis sudah selesai (Result Screen)
     if (isFinished) {
         return (
             <div className="quiz-container">
@@ -72,7 +107,7 @@ const QuizPage = () => {
         );
     }
 
-    // 6. Tampilan saat kuis sedang berjalan (Arena Kuis)
+    // 8. Tampilan saat kuis sedang berjalan (Arena Kuis)
     return (
         <div className="quiz-arena-container">
             {/* Header Arena */}

@@ -85,6 +85,30 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     }
 });
 
+// Rute untuk menyimpan skor kuis ke database
+app.post('/api/simpan-skor', (req, res) => {
+    // 1. Ubah tangkapan data jadi phone_number
+    const { phone_number, nama_ruangan, skor } = req.body;
+
+    // 2. Ubah validasinya juga
+    if (!phone_number || skor === undefined) {
+        return res.status(400).json({ success: false, message: 'Data tidak lengkap. Nomor HP dan skor wajib ada.' });
+    }
+
+    // 3. Query menggunakan nama kolom phone_number
+    const query = 'INSERT INTO riwayat_kuis (phone_number, nama_ruangan, skor) VALUES (?, ?, ?)';
+    
+    // 4. Masukkan variabel phone_number ke dalam array eksekusi
+    db.query(query, [phone_number, nama_ruangan, skor], (err, results) => {
+        if (err) {
+            console.error('Gagal menyimpan skor ke database:', err);
+            return res.status(500).json({ success: false, message: 'Gagal menyimpan skor.' });
+        }
+        
+        res.json({ success: true, message: 'Skor berhasil disimpan ke catatan belajarmu!' });
+    });
+});
+
 app.listen(PORT, () => {
     console.log(`Backend udah jalan di http://localhost:${PORT}`);
 });
