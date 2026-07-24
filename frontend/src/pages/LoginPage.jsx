@@ -52,7 +52,7 @@ const LoginPage = () => {
                 <div className="auth-logo">AxoLearn</div>
 
                 {/* Tempat naruh gambar maskot nanti */}
-                <div className="auth-mascot">[Gambar Maskot]</div>
+
 
                 <p className="auth-title">Selamat datang kembali!</p>
                 <p className="auth-subtitle">Mari lanjut belajar.</p>
