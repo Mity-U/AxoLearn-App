@@ -1,27 +1,20 @@
+// backend/src/server.js
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+const authRoutes = require('./routes/authRoutes'); // Panggil rute auth
 
 const app = express();
-// Kita pakai port 5000 untuk backend (karena 5173 udah dipakai frontend)
-const PORT = process.env.PORT || 5000;
 
-// Middleware (Satpam & Penerjemah)
+// Biar React (frontend) bisa ngobrol sama API (backend) tanpa diblokir
 app.use(cors());
+// Biar bisa ngebaca data yang dikirim dalam bentuk JSON
 app.use(express.json());
 
-// Panggil file route yang baru kita bikin
-const uploadRoutes = require('./routes/uploadRoutes');
+// Daftarin rute login & register di jalur /api/auth
+app.use('/api/auth', authRoutes);
 
-// Daftarin jalurnya dengan awalan '/api/upload'
-app.use('/api/upload', uploadRoutes);
-
-// Route sederhana buat ngetes server
-app.get('/', (req, res) => {
-    res.send('berhasil');
-});
-
-// Menyalakan server
+// Nyalain server di port 5000
+const PORT = 5000;
 app.listen(PORT, () => {
-    console.log(`[SERVER] Backend AxoLearn running di http://localhost:${PORT}`);
+    console.log(`Backend udah jalan di http://localhost:${PORT}`);
 });

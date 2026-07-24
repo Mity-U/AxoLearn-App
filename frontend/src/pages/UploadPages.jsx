@@ -4,7 +4,7 @@ import { UploadCloud, FileWarning, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 // Memanggil file CSS yang baru saja dibuat
-import './UploadPage.css';
+import '../styles/UploadPage.css';
 
 const UploadPage = () => {
     const [uploadStatus, setUploadStatus] = useState('idle');
