@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Memanggil file desain CSS
-import './QuizPage.css';
+import '../styles/QuizPage.css';
 
 const QuizPage = () => {
     const location = useLocation();
