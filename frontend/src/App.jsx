@@ -1,10 +1,18 @@
-import UploadPages from './pages/UploadPages';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import UploadPage from './pages/UploadPages'; 
+import QuizPage from './pages/QuizPage';     
 
 function App() {
   return (
-    <div>
-      <UploadPages />
-    </div>
+    <Router>
+      <Routes>
+        {/* Halaman utama untuk upload materi */}
+        <Route path="/" element={<UploadPage />} />
+        
+        {/* Halaman arena kuis */}
+        <Route path="/quiz" element={<QuizPage />} /> 
+      </Routes>
+    </Router>
   );
 }
 
