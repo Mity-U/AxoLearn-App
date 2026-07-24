@@ -1,0 +1,148 @@
+/* UploadPage.css */
+
+.upload-container {
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-family: sans-serif;
+}
+
+.upload-title {
+    color: #ffffff;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-subtitle {
+    color: #888888;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.drop-zone {
+    border: 2px dashed #666666;
+    padding: 60px;
+    border-radius: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background-color: transparent;
+}
+
+/* Gaya saat file sedang diseret (di-drag) ke atas kotak */
+.drop-zone.active {
+    background-color: #2a2a2a;
+    border: 2px solid #4ade80;
+}
+
+.drop-title {
+    color: #ffffff;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+}
+
+.drop-text {
+    color: #aaaaaa;
+    margin-top: 0.5rem;
+}
+
+.status-container,
+.error-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.status-title {
+    color: #ffffff;
+    margin-top: 1rem;
+}
+
+.status-text,
+.error-text {
+    color: #aaaaaa;
+}
+
+.success-container {
+    margin-top: 20px;
+    padding: 40px;
+    background-color: #2a2a2a;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.success-title {
+    color: #4ade80;
+    /* Hijau cerah */
+    margin-bottom: 0.5rem;
+}
+
+.success-desc {
+    color: #cccccc;
+    margin-bottom: 1.5rem;
+}
+
+.input-field {
+    padding: 12px 16px;
+    width: 80%;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-size: 1rem;
+    outline: none;
+}
+
+.start-button {
+    padding: 12px 30px;
+    background-color: #4ade80;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(74, 222, 128, 0.2);
+}
+
+.error-title {
+    color: #ef4444;
+    margin-top: 1rem;
+}
+
+.retry-button {
+    padding: 10px 20px;
+    margin-top: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid #666;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+/* Animasi Loading */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1.5s linear infinite;
+}
